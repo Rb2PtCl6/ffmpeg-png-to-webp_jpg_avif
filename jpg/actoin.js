@@ -16,7 +16,7 @@ function getFiles (dir, files_){
     return files_;
 }
 
-function process_img(img, q_current, result_name, q_string, img_without_ext ){
+function process_img(img, q_current, result_name){
     const action=spawn("ffmpeg", ["-i",img,"-q",q_current,result_name])
     //console.log(result_name)
         action.stdout.on("data", data => {
@@ -35,7 +35,6 @@ function process_img(img, q_current, result_name, q_string, img_without_ext ){
 
 var img_list=getFiles("originals");
 var q_range=[2,31]
-var storage={}
 
 for (var img of img_list){
     //console.log(img)
@@ -46,13 +45,9 @@ for (var img of img_list){
     }
     //console.log(img_without_ext)
     for (var q_current=q_range[0];q_current<q_range[1]+1;q_current++){
-        var q_string=q_current+"q"
-        if (storage[q_string]==null){
-            storage[q_string]={}
-        }
         var result_name=`${rez_dir_name}/${img_without_ext}-${q_current}q.jpg`
         //console.log(`${img} ${q_current} ${result_name}`)
-        process_img(img, q_current, result_name, q_string, img_without_ext)
+        process_img(img, q_current, result_name)
     }
 }
 //console.log(storage)
