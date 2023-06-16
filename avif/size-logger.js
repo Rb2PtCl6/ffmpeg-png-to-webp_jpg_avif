@@ -15,6 +15,30 @@ function getFiles (dir, files_){
     return files_;
 }
 
+function csv(data){
+	const keys = Object.keys(data);
+	const headers = Object.keys(data[keys[0]]);
+	var rows = [];
+
+	// Добавляем заголовки в массив rows
+	rows.push(['q', ...headers]);
+
+	// Добавляем значения в массив rows
+	keys.forEach((key) => {
+		const row = [key, ...headers.map((header) => data[key][header])];
+		rows.push(row);
+	});
+
+	// Создание CSV-строки
+	var csvContent = rows.map(row => row.join(',')).join('\n');
+
+	// Запись данных в файл
+	fs.writeFile('img_q_avif_b.csv', csvContent, (err) => {
+		if (err) throw err;
+		console.log('Conversion completed. CSV file saved as img_q_avif_b.csv');
+	});
+}
+
 var img_q={}
 var raw=getFiles("originals")
 var img_name=[raw[0],raw[1],raw[2],raw[3]]
@@ -43,13 +67,16 @@ for (var key of keys){
     }
 }
 //console.log(img_q)
-img_q['quality']={}
-for (var key of keys){
-    img_q['quality'][key]=key
-}
+//img_q['quality']={}
+//for (var key of keys){
+    //img_q['quality'][key]=key
+//}
 console.log(img_q)
 var img_q_keys=Object.keys(img_q)
 console.log(img_q_keys)
 
-fs.appendFileSync("img_q.json",JSON.stringify(img_q))
-fs.appendFileSync("img_q_keys.json",JSON.stringify(img_q_keys))
+fs.appendFileSync("img_q_avif_b.json",JSON.stringify(img_q))
+fs.appendFileSync("img_q_keys_avif.json",JSON.stringify(img_q_keys))
+
+
+csv(img_q)
